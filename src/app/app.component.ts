@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SobrenosotrosComponent } from "./sobrenosotros/sobrenosotros.component";
+import { IndexComponent } from "./index/index.component";
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SobrenosotrosComponent],
+  imports: [RouterOutlet, IndexComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
