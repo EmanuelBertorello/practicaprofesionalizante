@@ -9,7 +9,7 @@ import { RegistroComponent } from './registro/registro.component';
 import { RecuperarContraComponent } from './recuperar-contra/recuperar-contra.component';
 
 export  const routes: Routes = [
-  { path: 'stock', component: StockComponent,},
+  { path: "stock", component: StockComponent,},
   {path: "recetas", component:RecetasComponent},
   {path: "info", component:SobrenosotrosComponent},
   {path: "index", component:IndexComponent},
