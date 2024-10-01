@@ -6,6 +6,7 @@ import { IndexComponent } from './index/index.component';
 import { SobrenosotrosComponent } from './sobrenosotros/sobrenosotros.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { RegistroComponent } from './registro/registro.component';
+import { RecuperarContraComponent } from './recuperar-contra/recuperar-contra.component';
 
 export  const routes: Routes = [
   { path: 'stock', component: StockComponent,},
@@ -14,6 +15,7 @@ export  const routes: Routes = [
   {path: "index", component:IndexComponent},
   {path: "login", component:LogInComponent},
   {path: "registro", component:RegistroComponent},
+  {path: "recuperarcontra", component:RecuperarContraComponent},
   {path: '**',component:NotfoundComponent}
 ];
 
