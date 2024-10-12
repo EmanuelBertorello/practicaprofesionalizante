@@ -7,8 +7,14 @@ import { SobrenosotrosComponent } from './sobrenosotros/sobrenosotros.component'
 import { LogInComponent } from './log-in/log-in.component';
 import { RegistroComponent } from './registro/registro.component';
 import { RecuperarContraComponent } from './recuperar-contra/recuperar-contra.component';
+import { ProteComponent } from './prote/prote.component';
+import { GrasasComponent } from './grasas/grasas.component';
+import { CarboComponent } from './carbo/carbo.component';
 
 export  const routes: Routes = [
+  { path: "prote", component: ProteComponent,},
+  { path: "grasas", component: GrasasComponent,},
+  { path: "carbos", component: CarboComponent,},
   { path: "stock", component: StockComponent,},
   {path: "recetas", component:RecetasComponent},
   {path: "info", component:SobrenosotrosComponent},
