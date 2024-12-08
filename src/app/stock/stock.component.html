@@ -1,84 +1,62 @@
-<div style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png') ;" >
-<div class=" flex justify-center items-center">
-  <div class="container  max-w-sm p-4 sm:w-1/2">
-    <div class="card flex flex-col justify-center p-10 bg-white rounded-lg shadow-2xl">
-      <div class="prod-title">
-        <p class="text-2xl uppercase text-gray-900 font-bold"> CarboHidratos</p>
-        <p class="uppercase text-sm text-gray-400">
-        Tuberculos y pastas
-        </p>
-      </div>
-      <div class="prod-img">
-        <img src="../../assets/img/carbos.jpg"
-             class="w-full object-cover object-center" />
-      </div>
-      <div class="prod-info grid gap-10">
-        <div>
+<div
+  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center bg-cover bg-no-repeat"
+  style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
+>
+  <div class="w-full max-w-5xl bg-white/90 shadow-lg rounded-lg p-6">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-3 py-3 text-center w-1/4">Nombre</th>
+          <th scope="col" class="px-3 py-3 text-center w-1/4">Cantidad</th>
+          <th scope="col" class="px-3 py-3 text-center w-1/4">Medida</th>
+          <th scope="col" class="px-3 py-3 text-center w-1/4">Macro</th> <!-- Nueva columna Macro -->
+          <th scope="col" class="px-3 py-3 text-center w-1/4">Acciones</th> <!-- Columna de acciones -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of stocks$ | async" class="bg-white border-b dark:border-gray-700">
+          <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">{{ stock.nombre }}</th>
+          <td class="px-3 py-4 text-center">{{ stock.cantidad }}</td>
+          <td class="px-3 py-4 text-center">{{ stock.tipo }}</td>
           
-        </div>
-        <div class="flex flex-col md:flex-row justify-between items-center text-gray-900">
-         
-          <a href="/carbos"
-                  class="px-6 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none">
-          Stock</a>
-        </div>
-      </div>
-    </div>
+          <!-- Columna para mostrar el valor de macro con colores dinámicos -->
+          <td class="px-3 py-4 text-center">
+            <span [ngClass]="{
+              'bg-green-500': stock.macro === 'grasas',
+              'bg-red-500': stock.macro === 'proteina',
+              'bg-blue-500': stock.macro !== 'grasas' && stock.macro !== 'proteina'
+            }" class="text-white py-1 px-3 rounded">
+              {{ stock.macro }}
+            </span>
+          </td>
+          
+          <td class="px-3 py-4 text-center">
+            <!-- Botón para dar de baja -->
+            <button
+              (click)="bajaStock(stock.id)" 
+              class="text-red-500 hover:underline"
+            >   
+              Dar de baja
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+  <!-- Botón de "Cargar Stock" con el mismo color azul -->
+  <a
+    href="new"
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
+  >
+    Cargar Stock
+  </a>
+
+  <!-- Botón de "Volver al inicio" con el mismo color azul -->
+  <a
+    href="index"
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
+  >
+    Volver al inicio
+  </a>
 </div>
-<!-- component -->
-<div class=" flex justify-center items-center">
-  <div class="container  max-w-sm p-4 sm:w-1/2">
-    <div class="card flex flex-col justify-center p-10 bg-white rounded-lg shadow-2xl">
-      <div class="prod-title">
-        <p class="text-2xl uppercase text-gray-900 font-bold">Grasas</p>
-        <p class="uppercase text-sm text-gray-400">
-        vegetales
-        </p>
-      </div>
-      <div class="prod-img">
-        <img src="../../assets/img/grasas.jpg"
-             class="w-full object-cover object-center" />
-      </div>
-      <div class="prod-info grid gap-10">
-        <div>
-          
-        </div>
-        <div class="flex flex-col md:flex-row justify-between items-center text-gray-900">
-         
-          <a href="/grasas"
-          class="px-6 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none">
-  Stock</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- component -->
-<div class=" flex justify-center items-center">
-  <div class="container  max-w-sm p-4 sm:w-1/2">
-    <div class="card flex flex-col justify-center p-10 bg-white rounded-lg shadow-2xl">
-      <div class="prod-title">
-        <p class="text-2xl uppercase text-gray-900 font-bold">Proteinas</p>
-        <p class="uppercase text-sm text-gray-400">
-        carnes y legumbres
-        </p>
-      </div>
-      <div class="prod-img">
-        <img src="../../assets/img/prote.avif"
-             class="w-full object-cover object-center" />
-      </div>
-      <div class="prod-info grid gap-10">
-        <div>
-          
-        </div>
-        <div class="flex flex-col md:flex-row justify-between items-center text-gray-900">
-         
-          <a href="/prote"
-          class="px-6 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none">
-  Stock</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div></div>
