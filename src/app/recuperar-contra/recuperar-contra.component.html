@@ -1,45 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar contraseña</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-cover bg-no-repeat h-full w-full flex flex-col t justify-center content-center " style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"  >
-    <div class="rounded-lg border-3 border-black bg-gray-100 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16 mx-0 mt-16 w-full h-screen rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:max-w-none">
-        <div class="mx-0 max-w-7xl px-6 lg:px-8 justify-center content-center ">
-            <div class=" -mt-16 p-2 lg:flex-shrink-0  lg:flex-shrink-0">
-
-                <div class="rounded-lg border-3 border-black bg-gray-100 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center mx-0 w-500px h-screen rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:max-w-none mt-16">
-                    <div class="flex  flex-col justify-center px-6 py-12 lg:px-8">
-                        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-                          <img class="mx-auto h-10 w-auto h-[120px] w-[120px] rounded-full border-white" src="../../assets/logo/logo.jpg" alt="Your Company">
-                          <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">recuperar la contraseña</h2>
-                        </div>
-                        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                            <form>
-
-                                <div class="mb-4">
-
-
-                                </div>
-                                <div class="mb-4">
-                                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Correo electronico</label>
-                                    <input type="email"
-                     id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-                                </div>
-                                <div class="mb-4">
-
-                                </div>
-                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">recuperar cuenta</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-              </div>
+<div class="bg-cover bg-no-repeat h-screen w-full flex flex-col justify-center items-center" 
+     style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
+  <!-- Caja interna -->
+  <div class="rounded-3xl border-3 border-black bg-gray-100 ring-1 ring-gray-200 lg:flex lg:flex-col lg:justify-center py-12 px-6 lg:py-16 w-full max-w-md lg:max-w-lg h-auto min-h-[60vh]">
+    <div class="flex flex-col justify-center items-center">
+      <!-- Logo -->
+      <img class="h-[120px] w-[120px] rounded-full border-white shadow-2xl mb-6" 
+           src="../../assets/logo/logo.jpg" 
+           alt="logo">
+      
+      <!-- Título -->
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Recuperar la contraseña</h2>
+      
+      <!-- Formulario -->
+      <form class="space-y-6 w-full max-w-sm" (submit)="recuperarContrasena(email.value); $event.preventDefault()">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-900">Correo electrónico</label>
+          <div class="mt-2">
+            <input id="email" #email type="email" 
+                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                   placeholder="Ingresa tu correo" required />
+          </div>
         </div>
-      </div>
-</body>
-</html>
+        <div>
+          <button type="submit" 
+                  class="w-full flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600">
+            Recuperar contraseña
+          </button>
+        </div>
+      </form>
+
+      <!-- Enlace Volver -->
+      <a href="/index" 
+         class="mt-6 text-indigo-600 hover:text-indigo-500 font-semibold">
+        Volver
+      </a>
+    </div>
+  </div>
+</div>

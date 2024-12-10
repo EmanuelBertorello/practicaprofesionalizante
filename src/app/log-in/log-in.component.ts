@@ -27,6 +27,7 @@ export class LogInComponent {
 
   isRequired(field: 'email' | 'password'): boolean {
     const control = this.form.get(field);
+    console.log(field)
     return !!(control?.hasError('required') && control.touched);
   }
 

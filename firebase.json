@@ -1,1 +1,16 @@
-{}
+{
+  "hosting": {
+    "public": "dist/proyecto-escuela/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

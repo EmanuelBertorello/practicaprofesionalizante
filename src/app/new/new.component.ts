@@ -35,12 +35,13 @@ export class NewComponent {
         };
 
         await this.stockService.create(stock);
-        toast.success('cargado correctamente');
-      } catch (error) {
-        console.error('Error al procesar el formulario', error);
+        toast.success('cargado correctamente');toast
+
+      } catch  {
+        toast.success('Error al procesar el formulario' );
       }
     } else {
-      alert('Formulario inválido');
+      toast.error('Formulario inválido');
     }
   }
 }

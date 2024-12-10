@@ -2,41 +2,41 @@
   class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center bg-cover bg-no-repeat"
   style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
 >
-  <div class="w-full max-w-5xl bg-white/90 shadow-lg rounded-lg p-6">
+  <!-- Contenedor de la tabla con tamaño máximo -->
+  <div class="w-full max-w-5xl bg-white/90 shadow-lg rounded-lg p-6 overflow-y-auto max-h-[75vh]">
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th scope="col" class="px-3 py-3 text-center w-1/4">Nombre</th>
+          <th scope="col" class="px-3 py-3 text-center w-1/3">Nombre</th>
           <th scope="col" class="px-3 py-3 text-center w-1/4">Cantidad</th>
           <th scope="col" class="px-3 py-3 text-center w-1/4">Medida</th>
-          <th scope="col" class="px-3 py-3 text-center w-1/4">Macro</th> <!-- Nueva columna Macro -->
           <th scope="col" class="px-3 py-3 text-center w-1/4">Acciones</th> <!-- Columna de acciones -->
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let stock of stocks$ | async" class="bg-white border-b dark:border-gray-700">
-          <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">{{ stock.nombre }}</th>
-          <td class="px-3 py-4 text-center">{{ stock.cantidad }}</td>
-          <td class="px-3 py-4 text-center">{{ stock.tipo }}</td>
-          
-          <!-- Columna para mostrar el valor de macro con colores dinámicos -->
-          <td class="px-3 py-4 text-center">
-            <span [ngClass]="{
-              'bg-green-500': stock.macro === 'grasas',
-              'bg-red-500': stock.macro === 'proteina',
-              'bg-blue-500': stock.macro !== 'grasas' && stock.macro !== 'proteina'
-            }" class="text-white py-1 px-3 rounded">
+          <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
+            {{ stock.nombre }}
+            <div
+              [ngClass]="{
+                'bg-green-500': stock.macro === 'grasas',
+                'bg-red-500': stock.macro === 'proteina',
+                'bg-blue-500': stock.macro !== 'grasas' && stock.macro !== 'proteina'
+              }"
+              class="text-white py-1 px-3 rounded mt-1 inline-block text-xs"
+            >
               {{ stock.macro }}
-            </span>
-          </td>
-          
-          <td class="px-3 py-4 text-center">
+            </div>
+          </th>
+          <td class="  py-4 text-center">{{ stock.cantidad }}</td>
+          <td class="  py-4 text-center">{{ stock.tipo }}</td>
+          <td class="  py-4 text-center">
             <!-- Botón para dar de baja -->
             <button
               (click)="bajaStock(stock.id)" 
               class="text-red-500 hover:underline"
             >   
-              Dar de baja
+              Borrar
             </button>
           </td>
         </tr>
