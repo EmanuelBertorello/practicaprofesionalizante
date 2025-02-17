@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Firestore, collection, query, getDocs, deleteDoc, doc } from '@angular/fire/firestore';
+import { Firestore, collection, query, getDocs, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Stock {
   id: string;
@@ -9,6 +10,7 @@ interface Stock {
   cantidad: number;
   tipo: string;
   macro: string;
+  minimo: number;
 }
 
 @Component({
@@ -16,45 +18,89 @@ interface Stock {
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule] 
 })
 export class StockComponent implements OnInit {
   stocks$: Observable<Stock[]> | undefined;
   private firestore = inject(Firestore);
+  selectedStock: Stock | null = null; // Variable para el modal
+  showConfirmModal: boolean = false; // Controla la visibilidad del modal de confirmación
 
   async ngOnInit() {
-    const stockCollection = collection(this.firestore, 'stocks');
-    const q = query(stockCollection);
-
-    try {
-      const querySnapshot = await getDocs(q);
-      const stocks: Stock[] = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data() as Stock;
-        stocks.push({ ...data, id: doc.id }); // Asegúrate de agregar el ID del documento
-      });
-      this.stocks$ = of(stocks); // Convertir la lista a un Observable
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+    this.refreshStockList();
   }
 
-  // Función para dar de baja un stock
-  async bajaStock(stockId: string): Promise<void> {
-    const stockRef = doc(this.firestore, 'stocks', stockId);
+  modificarStock(stock: Stock) {
+    this.selectedStock = { ...stock }; 
+  }
+  
+  cerrarModal() {
+    this.selectedStock = null;
+  }
 
+  // Mostrar el modal de confirmación de eliminación
+  mostrarModalConfirmacion(stock: Stock) {
+    this.selectedStock = stock;
+    this.showConfirmModal = true;
+  }
+
+  // Cerrar el modal de confirmación sin eliminar
+  cerrarModalConfirmacion() {
+    this.selectedStock = null;
+    this.showConfirmModal = false;
+  }
+
+  // Eliminar el stock
+  async bajaStock(stockId: string | undefined) {
+    const id = stockId ?? ''; // Valor por defecto
+    const stockRef = doc(this.firestore, 'stocks', id);
+  
     try {
-      await deleteDoc(stockRef); // Eliminar el stock
-      console.log(`Stock con ID ${stockId} eliminado`);
-
-      // Actualizar la lista de stocks después de la eliminación
+      await deleteDoc(stockRef);
+      console.log(`Stock con ID ${id} eliminado`);
       this.refreshStockList();
+      this.cerrarModalConfirmacion(); // Cerrar el modal después de eliminar
     } catch (error) {
       console.error('Error eliminando el stock:', error);
     }
   }
+  // Método para calcular el estado
+getEstado(stock: any): string {
+  if (stock.cantidad > stock.minimo) {
+    return 'OK';
+  } else if (stock.cantidad === stock.minimo) {
+    return 'Mínimo';
+  } else {
+    return 'Faltante';
+  }
+}
 
-  // Función para actualizar la lista de stocks después de una eliminación
+
+  // Guarda los cambios realizados en el stock
+  async guardarCambios() {
+    if (this.selectedStock) {
+      const stockRef = doc(this.firestore, 'stocks', this.selectedStock.id);
+
+      try {
+        // Verifica si los campos realmente cambian antes de hacer la actualización
+        const cambios: Partial<Stock> = {};
+        if (this.selectedStock.nombre) cambios.nombre = this.selectedStock.nombre;
+        if (this.selectedStock.cantidad) cambios.cantidad = this.selectedStock.cantidad;
+        if (this.selectedStock.tipo) cambios.tipo = this.selectedStock.tipo;
+
+        if (Object.keys(cambios).length > 0) {
+          await updateDoc(stockRef, cambios);
+          console.log(`Stock con ID ${this.selectedStock.id} actualizado`);
+          this.cerrarModal();
+          this.refreshStockList(); // Recargar la tabla
+        }
+      } catch (error) {
+        console.error('Error al actualizar el stock:', error);
+      }
+    }
+  }
+
+  // Recarga la lista de stocks
   private async refreshStockList() {
     const stockCollection = collection(this.firestore, 'stocks');
     const q = query(stockCollection);

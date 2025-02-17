@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Stock } from './stock.component'; // Importar la interfaz
+import { Stock } from '../app/stock/stock.component'; // Importar la interfaz
 
 @Injectable({
   providedIn: 'root',

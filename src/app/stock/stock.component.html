@@ -1,68 +1,146 @@
 <div
-  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center bg-cover bg-no-repeat"
+  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center"
   style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
 >
-  <!-- Contenedor de la tabla con tamaño máximo -->
-  <div class="w-full max-w-5xl bg-white/90 shadow-lg rounded-lg p-6 overflow-y-auto max-h-[75vh]">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th scope="col" class="px-3 py-3 text-center w-1/3">Nombre</th>
-          <th scope="col" class="px-3 py-3 text-center w-1/4">Cantidad</th>
-          <th scope="col" class="px-3 py-3 text-center w-1/4">Medida</th>
-          <th scope="col" class="px-3 py-3 text-center w-1/4">Acciones</th> <!-- Columna de acciones -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let stock of stocks$ | async" class="bg-white border-b dark:border-gray-700">
-          <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
-            {{ stock.nombre }}
-            <div
-              [ngClass]="{
-                'bg-green-500': stock.macro === 'grasas',
-                'bg-red-500': stock.macro === 'proteina',
-                'bg-blue-500': stock.macro !== 'grasas' && stock.macro !== 'proteina'
-              }"
-              class="text-white py-1 px-3 rounded mt-1 inline-block text-xs"
-            >
-              {{ stock.macro }}
-            </div>
-          </th>
-          <td class="  py-4 text-center">{{ stock.cantidad }}</td>
-          <td class="  py-4 text-center">{{ stock.tipo }}</td>
-          <td class="  py-4 text-center">
-            <!-- Botón para dar de baja -->
-            <button
-              (click)="bajaStock(stock.id)" 
-              class="text-red-500 hover:underline"
-            >   
-              Borrar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Modal de confirmación -->
+  <div
+  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center"
+  style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
+>
+  <!-- Modal de confirmación -->
+  <div *ngIf="stocks$ | async as stocks; else loading">
+    <div class="w-full sm:w-11/12 lg:w-9/12 mx-auto">
+      <table class="min-w-full table-auto w-full">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 border w-1/4">Nombre</th>
+            <th class="px-4 py-2 border sm:text-base">Cantidad</th>
+            <th class="px-4 py-2 border">Tipo</th>
+            <!-- Columna Estado (visible solo en PC) -->
+            <th class="px-4 py-2 border hidden lg:table-cell">Estado</th>
+            <!-- Columna Mínimo (visible solo en PC) -->
+            <th class="px-4 py-2 border hidden lg:table-cell">Mínimo</th>
+            <th class="px-4 py-2 border">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of stocks">
+            <td class="px-4 py-2 border">{{ stock.nombre }}</td>
+            <td class="px-4 py-2 border text-3xl sm:text-xl">{{ stock.cantidad }}</td>
+            <td class="px-4 py-2 border">{{ stock.tipo }}</td>
+            <!-- Mostrar el estado calculado aquí -->
+            <td class="px-4 py-2 border hidden lg:table-cell">{{ getEstado(stock) }}</td>
+            <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.minimo }}</td>
+            <td class="px-4 py-2 border">
+              <button 
+                (click)="modificarStock(stock)" 
+                class="bg-blue-500 text-white w-full px-4 py-2 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1">
+                Modificar
+              </button>
+              <button 
+                (click)="mostrarModalConfirmacion(stock)" 
+                class="bg-red-500 text-white w-full px-4 py-2 rounded-md hover:bg-red-400 focus:ring-2 focus:ring-red-600 m-1">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- Botón de "Cargar Stock" con el mismo color azul -->
-  <a
-    href="new"
-    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
-  >
+  <ng-template #loading>
+    <p>Cargando...</p>
+  </ng-template>
+
+  <!-- Modal de confirmación -->
+  <div *ngIf="showConfirmModal" class="modal">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold">¿Estás seguro de eliminar este stock?</h3>
+      <p><strong>{{ selectedStock?.nombre }}</strong></p>
+      <button 
+      (click)="bajaStock(selectedStock?.id)" 
+      class="text-red-500"
+      *ngIf="selectedStock?.id">
+      Sí, eliminar
+    </button>
+      <button 
+        (click)="cerrarModalConfirmacion()" 
+        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-600">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- Enlaces de navegación -->
+  <a 
+    href="new" 
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6">
     Cargar Stock
   </a>
-
-  <!-- Botón de "Volver al inicio" con el mismo color azul -->
-  <a
-    href="index"
-    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
-  >
+  <a 
+    href="index" 
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6">
     Volver al inicio
   </a>
-  <a
-    href="cargarReceta"
-    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
-  >
+  <a 
+    href="cargarReceta" 
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6">
     Cargar Receta
   </a>
-</div>
+
+  <!-- MODAL PARA MODIFICAR STOCK -->
+  <div *ngIf="selectedStock" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 sm:w-1/3"> <!-- w-4/5 para móviles, w-1/3 para pantallas grandes -->
+      <h2 class="text-xl font-semibold mb-4">Modificar Stock</h2>
+  
+      <label class="block mb-2">Nombre:</label>
+      <input [(ngModel)]="selectedStock.nombre" class="w-full p-2 border rounded-md" />
+  
+      <label class="block mt-4 mb-2">Cantidad:</label>
+      <input type="number" [(ngModel)]="selectedStock.cantidad" class="w-full p-2 border rounded-md" />
+  
+      <label class="block mt-4 mb-2">Medida:</label>
+      <input [(ngModel)]="selectedStock.tipo" class="w-full p-2 border rounded-md" />
+  
+      <div class="flex justify-end mt-4">
+        <button 
+          (click)="guardarCambios()" 
+          class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-400 focus:ring-2 focus:ring-blue-600">
+          Guardar
+        </button>
+        <button 
+          (click)="cerrarModal()" 
+          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-600">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+  
+    </div>
+>
+
+<!-- Estilos adicionales para el modal de confirmación -->
+<style>
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+  }
+</style>
