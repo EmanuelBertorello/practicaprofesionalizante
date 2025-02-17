@@ -8,29 +8,55 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-cover bg-no-repeat min-h-screen flex items-center justify-center" style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-4xl mx-auto bg-gray-100 rounded-3xl shadow-xl p-6 lg:p-12">
-            <div class="text-center">
-                <h1 class="text-3xl lg:text-4xl font-bold mb-4">SOBRE NOSOTROS</h1>
-                <img class="mx-auto h-[120px] w-[120px] rounded-full shadow-lg" src="../../assets/logo/logo.jpg" alt="logo">
+<body class="min-h-screen flex items-center justify-center " ngSkipHydration style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
+    <div class="container mx-auto px-4 lg:px-8 w-11/12">
+        <div class="max-w-4xl mx-auto bg-gray-100 rounded-3xl shadow-xl p-6 lg:p-8">
+            <div class="text-center w-full">
+                <h1 class="text-2xl lg:text-3xl font-bold mb-4 font-serif">SOBRE NOSOTROS</h1>
+                <img class="mx-auto h-[100px] w-[100px] rounded-full shadow-xl border border-black" src="../../assets/logo/logo.jpg" alt="logo">
             </div>
 
-            <div class="mt-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-8">
+            <div class="mt-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-8 text-center">
                 <!-- Información -->
-                <div class="text-center lg:text-left">
-                    <p class="text-2xl font-bold text-gray-900">ESCUELA N° 2031</p>
-                    <p class="mt-2 text-xl text-gray-700">Necochea 94, Cañada de Gómez</p>
-                    <p class="mt-2 text-xl text-gray-700">Horario: 08:00 a 17:00</p>
-                    <p class="mt-2 text-xl text-gray-700">Tel: 03471 42-3615</p>
+                <div class="text-center lg:text-left w-full text-center flex flex-col items-center">
+                    <p class="text-xl font-bold text-gray-900">
+                        📚 ESCUELA N° 2031
+                    </p>
+                    <p class="mt-2 text-lg text-gray-700">
+                        🏫 Necochea 94, Cañada de Gómez
+                    </p>
+                    <p class="mt-2 text-lg text-gray-700">
+                        🕒 Horario: 08:00 a 17:00
+                    </p>
+                    <p class="mt-2 text-lg text-gray-700">
+                        📞 Tel: 03471 42-3615
+                    </p>
                 </div>
+            </div>
 
-                <!-- Mapa -->
-                <div class="mt-6 lg:mt-0">
-                    <iframe class="w-full h-64 sm:h-80 lg:w-[400px] lg:h-[300px] rounded-lg shadow-lg"
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d353.3094036822005!2d-61.382680768368814!3d-32.817625392060975!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95c9df90978d05fb%3A0x86661f186353875c!2sEscuela%20Especial%20n%C2%B0%202031%20Albonico.!5e0!3m2!1ses!2sar!4v1727822270087!5m2!1ses!2sar"
-                        style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+            <div class="mt-6 lg:mt-0 w-full flex justify-center">
+                <iframe class="w-full h-64 sm:h-80 lg:w-[500px] lg:h-[350px] rounded-lg shadow-lg"
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d353.3094036822005!2d-61.382680768368814!3d-32.817625392060975!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95c9df90978d05fb%3A0x86661f186353875c!2sEscuela%20Especial%20n%C2%B0%202031%20Albonico.!5e0!3m2!1ses!2sar!4v1727822270087!5m2!1ses!2sar"
+                    style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+            <!-- Descripción con estilo -->
+            <div class="mt-8 text-center text-lg text-gray-800 leading-relaxed space-y-4 px-4">
+                <p class="text-lg font-semibold text-gray-900">
+                    📚 Escuela Especial Nº 2031 "María Molina de Albónico" es un espacio dedicado a la educación especial en Cañada de Gómez, provincia de Santa Fe, Argentina. Su misión es ofrecer una educación inclusiva y de calidad, adaptada a las necesidades de cada estudiante 👩‍🏫💡.
+                </p>
+                <p>
+                    La escuela se especializa en nivel primario, creando un ambiente seguro y accesible para todos los alumnos. Además, fomenta el crecimiento integral de los estudiantes y asegura el desarrollo personal de cada uno 📖💬.
+                </p>
+                <p>
+                    Además de las funciones pedagógicas, organiza eventos comunitarios y actividades que buscan sensibilizar sobre la importancia de la educación inclusiva y la integración de las personas con discapacidad 💖🤝.
+                </p>
+                <p>
+                    🌟 Si deseas saber más, puedes visitar su página de Facebook o contactar directamente para conocer las actividades y programas disponibles ✨📲.
+                </p>
+                <p>
+                    Es una institución donde la educación es un derecho para todos, sin barreras ni limitaciones. Un ejemplo de compromiso con el futuro de nuestros niños y jóvenes 👏🌱.
+                </p>
             </div>
 
             <!-- Botón Volver -->

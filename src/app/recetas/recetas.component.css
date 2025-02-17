@@ -1,0 +1,4 @@
+/* Estilo actualizado para cuando el artículo está en hover */
+.group-hover:hover {
+    z-index: 10; /* Aumenta el z-index para ponerlo por encima de otros elementos */
+}

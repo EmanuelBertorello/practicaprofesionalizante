@@ -10,6 +10,7 @@ import { RecuperarContraComponent } from './recuperar-contra/recuperar-contra.co
  
   
 import { NewComponent } from './new/new.component';
+import { CargarRecetaComponent } from './cargar-receta/cargar-receta.component';
  
 
 
@@ -22,6 +23,7 @@ export  const routes: Routes = [
   {  path: "login", component:LogInComponent},
   { path: "recuperarcontra", component:RecuperarContraComponent},
   { path: "new", component:NewComponent},
+  { path: "cargarReceta", component:CargarRecetaComponent},
   {  path: '**',component:NotfoundComponent}
 ];
 

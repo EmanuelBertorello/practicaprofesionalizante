@@ -1,0 +1,98 @@
+<div
+  class="bg-cover h-full bg-no-repeat h-screen w-full flex items-center justify-center"
+  style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
+>
+  <form
+    class="w-full max-w-lg mx-auto bg-gray-50 rounded-lg p-6 shadow-lg"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        name="nombre"
+        formControlName="nombre"
+        id="nombre"
+        type="text"
+        class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
+        required
+      />
+      <label
+        for="nombre"
+        class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+      >
+        Nombre
+      </label>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        type="number"
+        name="cantidad"
+        formControlName="cantidad"
+        id="cantidad"
+        class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
+        required
+      />
+      <label
+        for="cantidad"
+        class="peer-focus:font-medium absolute text-black-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+      >
+        Cantidad
+      </label>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <label
+        for="tipo"
+        class="peer-focus:font-medium text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]"
+      >
+        Medida
+      </label>
+      <select
+        id="tipo"
+        name="tipo"
+        formControlName="tipo"
+        class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        required
+      >
+        <option value="" disabled selected>Seleccione una medida</option>
+        <option value="kilogramo">Kilogramo</option>
+        <option value="paquete">Paquete</option>
+        <option value="unidad">Unidad/es</option> <!-- Nueva opción para "Unidad/es" -->
+      </select>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <label
+        for="macro"
+        class="peer-focus:font-medium text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]"
+      >
+        Macro
+      </label>
+      <select
+        id="macro"
+        name="macro"
+        formControlName="macro"
+        class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        required
+      >
+        <option value="" disabled selected>Seleccione una opción</option>
+        <option value="proteina">Proteína</option>
+        <option value="grasas">Grasas</option>
+        <option value="carbohidratos">Carbohidratos</option>
+      </select>
+    </div>
+    <button
+      type="submit"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      Cargar stock
+    </button>
+    <!-- Aquí se corrige el <a> para que tenga el mismo estilo -->
+    <a
+      routerLink="/stock"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
+    >
+      Volver
+    </a>
+  </form>
+</div>

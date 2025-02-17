@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sobrenosotros',
+  
+  host: { 'ngSkipHydration': '' },
   standalone: true,
   imports: [
     CommonModule,
