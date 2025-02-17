@@ -7,6 +7,7 @@
     [formGroup]="form"
     (ngSubmit)="submit()"
   >
+    <!-- Nombre de la receta -->
     <div class="relative z-0 w-full mb-5 group">
       <input
         name="nombre"
@@ -21,75 +22,126 @@
         for="nombre"
         class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
-        Nombre
+        Nombre de la receta
       </label>
     </div>
+
+    <!-- Imagen de la receta -->
     <div class="relative z-0 w-full mb-5 group">
       <input
+        name="imagen"
+        formControlName="imagen"
+        id="imagen"
+        type="text"
+        class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
+        required
+      />
+      <label
+        for="imagen"
+        class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+      >
+        URL de la imagen
+      </label>
+    </div>
+
+    <!-- Información sobre la receta -->
+    <div class="relative z-0 w-full mb-5 group">
+      <textarea
+        name="info"
+        formControlName="info"
+        id="info"
+        class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
+        required
+      ></textarea>
+      <label
+        for="info"
+        class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+      >
+        Información adicional
+      </label>
+    </div>
+
+    <!-- Tiempo de cocción -->
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        name="tiempoCoccion"
+        formControlName="tiempoCoccion"
+        id="tiempoCoccion"
         type="number"
-        name="cantidad"
-        formControlName="cantidad"
-        id="cantidad"
         class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
         placeholder=" "
         required
       />
       <label
-        for="cantidad"
-        class="peer-focus:font-medium absolute text-black-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        for="tiempoCoccion"
+        class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
-        Cantidad
+        Tiempo de cocción (en minutos)
       </label>
     </div>
+  <!-- tipo-->
+    <select
+    id="tipo"
+    name="tipo"
+    formControlName="tipo"
+    class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+    required
+  >
+    <option value="" disabled selected>Tipo</option>
+    <option value="kilogramo">Saludable</option>
+    <option value="paquete">Rapida</option>
+    <option value="unidad">Nacional</option>  
+    <option value="unidad">interNacional</option>  
+  </select>
+     <!-- tipo-->
     <div class="relative z-0 w-full mb-5 group">
-      <label
-        for="tipo"
-        class="peer-focus:font-medium text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]"
-      >
-        Medida
-      </label>
-      <select
-        id="tipo"
-        name="tipo"
-        formControlName="tipo"
+      <textarea
+        name="tutorial"
+        formControlName="tutorial"
+        id="tutorial"
         class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
         required
+      ></textarea>
+      <label
+        for="tutorial"
+        class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
-        <option value="" disabled selected>Seleccione una medida</option>
-        <option value="kilogramo">Kilogramo</option>
-        <option value="paquete">Paquete</option>
-        <option value="unidad">Unidad/es</option> <!-- Nueva opción para "Unidad/es" -->
-      </select>
+        Tutorial paso a paso
+      </label>
     </div>
+
+    <!-- Ingredientes (campo de texto para lista de ingredientes) -->
     <div class="relative z-0 w-full mb-5 group">
-      <label
-        for="macro"
-        class="peer-focus:font-medium text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]"
-      >
-        Macro
-      </label>
-      <select
-        id="macro"
-        name="macro"
-        formControlName="macro"
+      <textarea
+        name="ingredientes"
+        formControlName="ingredientes"
+        id="ingredientes"
         class="block py-2.5 px-0 w-full bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
         required
+      ></textarea>
+      <label
+        for="ingredientes"
+        class="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
-        <option value="" disabled selected>Seleccione una opción</option>
-        <option value="proteina">Proteína</option>
-        <option value="grasas">Grasas</option>
-        <option value="carbohidratos">Carbohidratos</option>
-      </select>
+        Ingredientes (separados por comas)
+      </label>
     </div>
+
+    <!-- Botón para enviar el formulario -->
     <button
       type="submit"
       class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
-      Cargar stock
+      Cargar receta
     </button>
-    <!-- Aquí se corrige el <a> para que tenga el mismo estilo -->
+
+    <!-- Enlace para volver -->
     <a
-      routerLink="/stock"
+      href="stock"
       class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
     >
       Volver

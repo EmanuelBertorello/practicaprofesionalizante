@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RecetaService } from './receta.service';
-
+const PATH = 'recetas';
 describe('RecetaService', () => {
   let service: RecetaService;
 

@@ -12,7 +12,7 @@
         />
       </div>
 
-      <div class="w-full mx-auto rounded-2xl bg-white p-5 bg-opacity-40 backdrop-filter backdrop-blur-lg">
+      <div class="w-full mx-auto rounded-2xl bg-white p-5 bg-opacity-40 backdrop-filter backdrop-blur-lg" style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-center px-2 mx-auto">
         
           <div *ngFor="let receta of filteredRecetas">
@@ -50,7 +50,7 @@
                     <div class="info-menu absolute left-0 top-full opacity-0 group-hover:opacity-100 bg-gray-300 p-4 rounded-xl w-full mt-2 transition-all duration-300"
                          [ngStyle]="{ 'z-index': receta.isHovered ? 30 : 0, 'position': 'relative' }">
                       <p><strong>Descripción:</strong> {{receta.Info}}</p>
-                      <p><strong>Tiempo de preparación:</strong> {{receta.tiempoCoccion}} minutos.</p>
+                      <p><strong>Tiempo de preparación:</strong> {{receta.TiempoCoccion}} minutos.</p>
                       <p><strong>Categoría:</strong> {{receta.Tipo}}</p>
                     </div>
                   </li>
@@ -64,10 +64,11 @@
     </div>
     
   </div>
+  <!-- Botón centrado en la parte inferior -->
   <a
-          href="index"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6"
-        >
-          Volver al inicio
-        </a>
+      href="index"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block absolute bottom-6 left-1/2 transform -translate-x-1/2"
+    >
+      Volver al inicio
+  </a>
 </div>

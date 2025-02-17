@@ -1,32 +1,35 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { toast } from 'ngx-sonner';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+
+const PATH = 'recetas';
 
 export interface CrearReceta {
-  imagen: string;
-  info: string;
-  nombre: string;
-  tipo: string;
+  Imagen: string;
+  Info: string;
+  Nombre: string;
+  Tipo: string;
   ingredientes: string[];
-  tiempoCoccion: number;
-  tutorial: string;
+  TiempoCoccion: number;
+  Tutorial: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecetaService {
+  private _firestore = inject(Firestore);
+  private _collection = collection(this._firestore, PATH);
 
-  constructor() { }
-
-  // Método para crear una receta (simulado aquí)
-  async create(receta: CrearReceta) {
-    try {
-      console.log('Receta creada:', receta); // Simulando la creación de la receta
-
-      // Aquí agregarías la lógica para guardar la receta en una base de datos o backend
-      toast.success('Receta guardada correctamente');
-    } catch (error) {
-      toast.error('Error al guardar receta');
-    }
+  create(receta: CrearReceta) {
+    console.log('Guardando receta:', receta);
+    return addDoc(this._collection, receta)
+      .then(() => {
+        toast.success('Receta guardada con éxito');
+      })
+      .catch((error) => {
+        console.error('Error al guardar la receta:', error);
+        toast.error('Error al guardar la receta');
+      });
   }
 }
