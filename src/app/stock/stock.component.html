@@ -2,35 +2,44 @@
   class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center"
   style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
 >
+  <!-- Buscador -->
+  <div class="search-container px-4 py-4">
+    <input
+      type="text" 
+      [(ngModel)]="searchQuery"   
+      (ngModelChange)="onSearchChange()"
+      placeholder="Buscar producto..."
+      class="search-input px-4 py-4 w-full"
+    />
+  </div>
+  
+
   <!-- Modal de confirmación -->
-  <div
-  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center"
-  style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
->
-  <!-- Modal de confirmación -->
-  <div *ngIf="stocks$ | async as stocks; else loading">
-    <div class="w-full sm:w-11/12 lg:w-9/12 mx-auto">
+  <div *ngIf="filteredStocks.length > 0; else loading">
+    <div class="w-full  ">
       <table class="min-w-full table-auto w-full">
         <thead>
           <tr>
-            <th class="px-4 py-2 border w-1/4">Nombre</th>
-            <th class="px-4 py-2 border sm:text-base">Cantidad</th>
-            <th class="px-4 py-2 border">Tipo</th>
-            <!-- Columna Estado (visible solo en PC) -->
+            <th class="px-4 py-2 border lg:w-1/3 xl:w-2/5">Nombre</th>
+            <th class="px-4 py-2 border sm:text-base lg:w-1/6">Cantidad</th>
+            <th class="px-4 py-2 border lg:w-1/6">Tipo</th>
             <th class="px-4 py-2 border hidden lg:table-cell">Estado</th>
-            <!-- Columna Mínimo (visible solo en PC) -->
             <th class="px-4 py-2 border hidden lg:table-cell">Mínimo</th>
+            <th class="px-4 py-2 border hidden lg:table-cell">Macro</th>
             <th class="px-4 py-2 border">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let stock of stocks">
-            <td class="px-4 py-2 border">{{ stock.nombre }}</td>
+          <tr *ngFor="let stock of filteredStocks" 
+    [ngStyle]="{
+      'background-color': getEstado(stock) === 'faltante' ? 'rgba(255, 0, 0, 0.2)' : (getEstado(stock) === 'ok' ? 'rgba(0, 255, 0, 0.2)' : 'transparent')
+    }">
+            <td class="px-4 py-2 border d:h-full md:w-48">{{ stock.nombre }}</td>
             <td class="px-4 py-2 border text-3xl sm:text-xl">{{ stock.cantidad }}</td>
             <td class="px-4 py-2 border">{{ stock.tipo }}</td>
-            <!-- Mostrar el estado calculado aquí -->
             <td class="px-4 py-2 border hidden lg:table-cell">{{ getEstado(stock) }}</td>
             <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.minimo }}</td>
+            <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.macro }}</td>
             <td class="px-4 py-2 border">
               <button 
                 (click)="modificarStock(stock)" 
@@ -52,6 +61,7 @@
   <ng-template #loading>
     <p>Cargando...</p>
   </ng-template>
+ 
 
   <!-- Modal de confirmación -->
   <div *ngIf="showConfirmModal" class="modal">
@@ -117,9 +127,7 @@
       </div>
     </div>
   </div>
-  
-    </div>
->
+</div>
 
 <!-- Estilos adicionales para el modal de confirmación -->
 <style>

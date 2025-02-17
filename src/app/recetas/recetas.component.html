@@ -7,7 +7,7 @@
             type="text"
             id="searchInput"
             placeholder="Buscar recetas..."
-            class="w-11/12 md:w-9/12 lg:w-9/12 xl:w-9/12 p-2 text-lg rounded-lg border border-gray-300"
+            class="w-11/12 md:w-9/12 lg:w-9/12 xl:w-9/12 max-w-lg p-2 text-lg rounded-lg border border-gray-300"
             (input)="onSearch($event)"
         />
       </div>
@@ -16,7 +16,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-center px-2 mx-auto">
         
           <div *ngFor="let receta of filteredRecetas">
-            <article class="bg-white p-6 mb-8 shadow transition duration-300 group transform hover:-translate-y-2 hover:shadow-2xl rounded-2xl cursor-pointer border group-hover:h-[calc(100%+40px)]"
+            <article class="bg-white p-6 mb-8 shadow-lg transition duration-300 group transform hover:-translate-y-2 hover:shadow-2xl rounded-2xl cursor-pointer border group-hover:h-[calc(100%+40px)]"
                      (mouseenter)="receta.isHovered = true"
                      (mouseleave)="receta.isHovered = false"
                      style="position: relative;">
@@ -24,7 +24,7 @@
                 <img class="h-40 rounded-2xl w-full object-cover group-hover:scale-105 group-hover:brightness-50 transition-transform duration-300 transform"
                      [src]="receta.Imagen" alt="{{receta.Nombre}}">
                 <a class="flex justify-center items-center bg-red-700 bg-opacity-80 z-10 absolute top-0 left-0 w-full h-full text-white rounded-2xl opacity-0 transition-all duration-300 transform group-hover:scale-105 text-xl group-hover:opacity-100"
-                   [href]="receta.tutorial" target="_self" rel="noopener noreferrer">
+                   [href]="receta.tutorial" target="_blank" rel="noopener noreferrer">
                   Ver tutorial
                   <svg class="ml-2 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                        xmlns="http://www.w3.org/2000/svg">
@@ -64,10 +64,11 @@
     </div>
     
   </div>
-  <!-- Botón centrado en la parte inferior -->
+
+  <!-- Botón centrado en la parte inferior (ahora fijo) -->
   <a
       href="index"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block absolute bottom-6 left-1/2 transform -translate-x-1/2"
+      class="volver-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block fixed bottom-6 left-1/2 transform -translate-x-1/2"
     >
       Volver al inicio
   </a>

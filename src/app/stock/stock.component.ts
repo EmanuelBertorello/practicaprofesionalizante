@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-interface Stock {
+export interface Stock {
   id: string;
   nombre: string;
   cantidad: number;
@@ -25,9 +25,16 @@ export class StockComponent implements OnInit {
   private firestore = inject(Firestore);
   selectedStock: Stock | null = null; // Variable para el modal
   showConfirmModal: boolean = false; // Controla la visibilidad del modal de confirmación
+  searchQuery: string = ''; // Variable para almacenar el texto de búsqueda
+  filteredStocks: Stock[] = []; // Para almacenar los stocks filtrados
 
   async ngOnInit() {
-    this.refreshStockList();
+    await this.refreshStockList();  // Cargar los datos iniciales
+
+    // Nos suscribimos al observable y actualizamos filteredStocks
+    this.stocks$?.subscribe(stocks => {
+      this.filteredStocks = stocks; // Inicialmente mostrar todos los stocks
+    });
   }
 
   modificarStock(stock: Stock) {
@@ -40,8 +47,9 @@ export class StockComponent implements OnInit {
 
   // Mostrar el modal de confirmación de eliminación
   mostrarModalConfirmacion(stock: Stock) {
-    this.selectedStock = stock;
-    this.showConfirmModal = true;
+    this.selectedStock = null;  // Cierra el modal de modificación
+    this.showConfirmModal = true;  // Abre el modal de confirmación
+    this.selectedStock = stock;  // Muestra el stock seleccionado
   }
 
   // Cerrar el modal de confirmación sin eliminar
@@ -58,23 +66,24 @@ export class StockComponent implements OnInit {
     try {
       await deleteDoc(stockRef);
       console.log(`Stock con ID ${id} eliminado`);
-      this.refreshStockList();
+      await this.refreshStockList();
       this.cerrarModalConfirmacion(); // Cerrar el modal después de eliminar
     } catch (error) {
       console.error('Error eliminando el stock:', error);
     }
   }
-  // Método para calcular el estado
-getEstado(stock: any): string {
-  if (stock.cantidad > stock.minimo) {
-    return 'OK';
-  } else if (stock.cantidad === stock.minimo) {
-    return 'Mínimo';
-  } else {
-    return 'Faltante';
-  }
-}
 
+  // Método para calcular el estado
+  getEstado(stock: Stock): string {
+    if (stock.cantidad > stock.minimo) {
+      return 'ok';
+    } else if (stock.cantidad === stock.minimo) {
+      return 'minimo';
+    } else {
+      return 'faltante';
+    }
+  }
+  
 
   // Guarda los cambios realizados en el stock
   async guardarCambios() {
@@ -92,7 +101,7 @@ getEstado(stock: any): string {
           await updateDoc(stockRef, cambios);
           console.log(`Stock con ID ${this.selectedStock.id} actualizado`);
           this.cerrarModal();
-          this.refreshStockList(); // Recargar la tabla
+          await this.refreshStockList(); // Recargar la lista de stocks
         }
       } catch (error) {
         console.error('Error al actualizar el stock:', error);
@@ -100,7 +109,7 @@ getEstado(stock: any): string {
     }
   }
 
-  // Recarga la lista de stocks
+  // Recarga la lista de stocks desde Firestore
   private async refreshStockList() {
     const stockCollection = collection(this.firestore, 'stocks');
     const q = query(stockCollection);
@@ -113,8 +122,23 @@ getEstado(stock: any): string {
         stocks.push({ ...data, id: doc.id });
       });
       this.stocks$ = of(stocks);
+      this.filteredStocks = stocks; // Inicialmente, mostramos todos los stocks
     } catch (error) {
       console.error('Error fetching data after delete:', error);
+    }
+  }
+
+  // Método que se llama cuando cambia el valor del buscador
+  onSearchChange() {
+    if (this.searchQuery.trim() === '') {
+      this.stocks$?.subscribe(stocks => {
+        this.filteredStocks = stocks; // Si el buscador está vacío, mostramos todos los stocks
+      });
+    } else {
+      // Filtrar los stocks según la búsqueda
+      this.filteredStocks = this.filteredStocks.filter(stock => 
+        stock.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     }
   }
 }
