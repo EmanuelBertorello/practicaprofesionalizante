@@ -1,54 +1,46 @@
-<div class="relative pt-2 lg:pt-2 min-h-screen w-full" style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
-
+<div class="relative pt-2 lg:pt-2 min-h-screen h-full w-full" style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
   <div class="bg-cover w-full flex justify-center items-center ngSkipHydration">
     <div class="w-full bg-white p-5 bg-opacity-40 backdrop-filter backdrop-blur-lg">
       <div class="w-full bg-white p-4 rounded-2xl mb-6 bg-opacity-60 backdrop-filter backdrop-blur-lg flex justify-center">
-        <input  
-            type="text"
-            id="searchInput"
-            placeholder="Buscar recetas..."
-            class="w-11/12 md:w-9/12 lg:w-9/12 xl:w-9/12 max-w-lg p-2 text-lg rounded-lg border border-gray-300"
-            (input)="onSearch($event)"
-        />
+        <input type="text" id="searchInput" placeholder="Buscar recetas..."
+          class="w-11/12 md:w-9/12 lg:w-9/12 xl:w-9/12 max-w-lg p-2 text-lg rounded-lg border border-gray-300"
+          (input)="onSearch($event)" />
       </div>
 
-      <div class="w-full mx-auto rounded-2xl bg-white p-5 bg-opacity-40 backdrop-filter backdrop-blur-lg" style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
+      <div class="w-full mx-auto rounded-2xl bg-white p-5 bg-opacity-40 backdrop-filter backdrop-blur-lg"
+        style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-center px-2 mx-auto">
-        
+
           <div *ngFor="let receta of filteredRecetas">
-            <article class="bg-white p-6 mb-8 shadow-lg transition duration-300 group transform hover:-translate-y-2 hover:shadow-2xl rounded-2xl cursor-pointer border group-hover:h-[calc(100%+40px)]"
-                     (mouseenter)="receta.isHovered = true"
-                     (mouseleave)="receta.isHovered = false"
-                     style="position: relative;">
+            <article class="bg-white p-6 mb-8 shadow-lg transition duration-300 group transform hover:-translate-y-2 hover:shadow-2xl rounded-2xl cursor-pointer border"
+              (mouseenter)="receta.isHovered = true" (mouseleave)="receta.isHovered = false" style="position: relative;">
               <div class="relative mb-4 rounded-2xl group-hover:filter group-hover:brightness-75 group-hover:bg-orange-500 transition-all duration-300">
                 <img class="h-40 rounded-2xl w-full object-cover group-hover:scale-105 group-hover:brightness-50 transition-transform duration-300 transform"
-                     [src]="receta.Imagen" alt="{{receta.Nombre}}">
+                  [src]="receta.Imagen" alt="{{receta.Nombre}}">
                 <a class="flex justify-center items-center bg-red-700 bg-opacity-80 z-10 absolute top-0 left-0 w-full h-full text-white rounded-2xl opacity-0 transition-all duration-300 transform group-hover:scale-105 text-xl group-hover:opacity-100"
-                   [href]="receta.tutorial" target="_blank" rel="noopener noreferrer">
+                  [href]="receta.tutorial" target="_blank" rel="noopener noreferrer">
                   Ver tutorial
                   <svg class="ml-2 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                       xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                      d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
                   </svg>
                 </a>
               </div>
-          
+
               <h3 class="font-medium text-xl leading-8">
                 {{receta.Nombre}}
               </h3>
-          
-              <!-- Sección de ingredientes que aparece en hover -->
-              <div class="recipe-list opacity-0 group-hover:opacity-100 max-h-0 group-hover:max-h-[500px] transition-all duration-500 ease-in-out"
-                   [ngStyle]="{ 'z-index': receta.isHovered ? 30 : 0, 'position': 'relative' }">
+
+              <div class="recipe-list" *ngIf="receta.isHovered" [ngStyle]="{ 'z-index': 30, 'position': 'relative' }">
                 <ul class="mt-4 bg-gray-100 p-4 rounded-xl">
-                  <li class="mb-2" *ngFor="let ingrediente of receta.ingredientes">
-                    🍴 {{ingrediente}}
+                  <li class="mb-2" *ngFor="let ingrediente of receta.ingredientes">🍽️
+                     {{ingrediente}}
                   </li>
                   <li class="info-item relative mb-2">
-                    <span class="text-blue-600 cursor-pointer">🔍 Info</span>
-                    <div class="info-menu absolute left-0 top-full opacity-0 group-hover:opacity-100 bg-gray-300 p-4 rounded-xl w-full mt-2 transition-all duration-300"
-                         [ngStyle]="{ 'z-index': receta.isHovered ? 30 : 0, 'position': 'relative' }">
+                    <span class="text-blue-600 cursor-pointer"> Info</span>
+                    <div class="info-menu absolute left-0 top-full bg-gray-300 p-4 rounded-xl w-full mt-2"
+                      [ngStyle]="{ 'z-index': 30, 'position': 'relative' }">
                       <p><strong>Descripción:</strong> {{receta.Info}}</p>
                       <p><strong>Tiempo de preparación:</strong> {{receta.TiempoCoccion}} minutos.</p>
                       <p><strong>Categoría:</strong> {{receta.Tipo}}</p>
@@ -58,18 +50,14 @@
               </div>
             </article>
           </div>
-          
+
         </div>
       </div>
     </div>
-    
-  </div>
 
-  <!-- Botón centrado en la parte inferior (ahora fijo) -->
-  <a
-      href="index"
-      class="volver-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block fixed bottom-6 left-1/2 transform -translate-x-1/2"
-    >
+    <a href="index"
+      class="volver-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block fixed bottom-6 left-1/2 transform -translate-x-1/2">
       Volver al inicio
-  </a>
+    </a>
+  </div>
 </div>

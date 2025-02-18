@@ -3,11 +3,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { StockService, CrearStock } from '../stock.service';
 import { toast } from 'ngx-sonner';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-new',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink,CommonModule ],
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.css']
 })
@@ -22,43 +22,47 @@ export class NewComponent {
     nombre: this._formBuilder.control('', Validators.required),
     cantidad: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
     tipo: this._formBuilder.control('', Validators.required),
-    macro: this._formBuilder.control('', Validators.required),
+    categoria: this._formBuilder.control('', Validators.required),  // Modificado de macro a categoria
     minimo: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
   });
 
   async submit() {
     if (this.form.valid) {
-      const { nombre, cantidad, tipo, macro, minimo } = this.form.value;
-
-      // Verificar si el stock con el mismo nombre ya existe
-      const exists = await this.stockService.checkIfStockExists(nombre ?? '');
-      if (exists) {
-        toast.error('Ya existe un stock con ese nombre');
-        return;
-      }
+      const { nombre, cantidad, tipo, categoria, minimo } = this.form.value;
 
       try {
-        const stock: CrearStock = {
-          nombre: nombre || '',
-          cantidad: cantidad ?? 0,
-          tipo: tipo ?? '',
-          macro: macro ?? '',
-          minimo: minimo ?? 0,
-        };
+        // 1. Buscar el stock existente por nombre
+        const existingStock = await this.stockService.getStockByName(nombre ?? '');
 
-        // Crear el stock solo si no existe
-        await this.stockService.create(stock);
-        toast.success('Cargado correctamente');
+        if (existingStock) {
+          // 2. Si existe, actualizar la cantidad
+          const updatedCantidad = (existingStock.cantidad || 0) + (cantidad ?? 0); // Suma segura con nullish coalescing
+          const updatedStock = { ...existingStock, cantidad: updatedCantidad }; // Crea un nuevo objeto con la cantidad actualizada
 
-        this.mensajeExito = '¡Stock cargado exitosamente!'; // 🔹 Mostrar mensaje en el template
+          await this.stockService.update(updatedStock); // Llama al método de actualización en tu servicio
+          toast.success('Stock actualizado correctamente');
+        } else {
+          // 3. Si no existe, crear el nuevo stock
+          const stock: CrearStock = {
+            nombre: nombre || '',
+            cantidad: cantidad ?? 0,
+            tipo: tipo ?? '',
+            categoria: categoria ?? '',
+            minimo: minimo ?? 0,
+          };
+          await this.stockService.create(stock);
+          toast.success('Stock creado correctamente');
+        }
+
+        this.mensajeExito = '¡Stock procesado exitosamente!';
         this.form.reset();
 
-        // Redirigir después de 2 segundos
         setTimeout(() => {
-          this.mensajeExito = ''; // 🔹 Ocultar mensaje antes de redirigir
-          this.router.navigate(['/stock']);
+          this.mensajeExito = '';
+ 
         }, 2000);
-      } catch {
+      } catch (error) {
+        console.error("Error al procesar el formulario:", error); // Imprime el error en la consola para depuración
         toast.error('Error al procesar el formulario');
       }
     } else {
@@ -66,3 +70,4 @@ export class NewComponent {
     }
   }
 }
+

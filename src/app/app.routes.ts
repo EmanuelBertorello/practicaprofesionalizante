@@ -11,6 +11,7 @@ import { RecuperarContraComponent } from './recuperar-contra/recuperar-contra.co
   
 import { NewComponent } from './new/new.component';
 import { CargarRecetaComponent } from './cargar-receta/cargar-receta.component';
+import { ListadoRecetasComponent } from './listado-recetas/listado-recetas.component';
  
 
 
@@ -24,6 +25,7 @@ export  const routes: Routes = [
   { path: "recuperarcontra", component:RecuperarContraComponent},
   { path: "new", component:NewComponent},
   { path: "cargarReceta", component:CargarRecetaComponent},
+  { path: "listadoRecetas", component:ListadoRecetasComponent},
   {  path: '**',component:NotfoundComponent}
 ];
 

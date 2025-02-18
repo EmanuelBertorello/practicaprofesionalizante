@@ -1,0 +1,113 @@
+<div
+  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center w-full"
+  style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
+>
+  <!-- Contenedor de búsqueda con el mismo ancho que la tabla -->
+  <div class="search-container px-4 py-4 w-full md:w-4/5">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()" 
+      placeholder="Buscar Receta..."
+      class="search-input px-4 py-4 w-full"
+    />
+  </div>
+
+  <!-- Tabla de recetas con el mismo ancho que el input -->
+  <div class="w-full md:w-4/5 overflow-x-auto">
+    <table class="min-w-full table-auto w-full">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 border">Nombre</th>
+          <th class="px-2 py-2 border sm:text-base">Imagen</th>
+          <th class="px-2 py-2 border">Descripción</th>
+ 
+          <th class="px-4 py-2 border">Tipo</th>
+          <th class="px-4 py-2 border">Tiempo de Cocción</th>
+          <th class="px-4 py-2 border">Ingredientes</th>
+          <th class="px-4 py-2 border">Tutorial</th>
+          <th class="px-4 py-2 border">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let receta of filteredRecetas">
+          <td class="px-4 py-2 border">{{ receta.Nombre }}</td>
+          <td class="px-2 py-2 border">
+            <img [src]="receta.Imagen" alt="Imagen de {{ receta.Nombre }}" class="w-16 h-16 object-cover">
+          </td>
+          <td class="px-2 py-2 border">{{ receta.Info }}</td>
+ 
+          <td class="px-4 py-2 border">{{ receta.Tipo }}</td>
+          <td class="px-4 py-2 border">{{ receta.TiempoCoccion }} min</td>
+          <td class="px-4 py-2 border">
+            <ul>
+              <li *ngFor="let ingrediente of receta.ingredientes">{{ ingrediente }}</li>
+            </ul>
+          </td>
+          <td class="px-4 py-2 border">{{ receta.Tutorial }}</td>
+          <td class="px-4 py-2 border">
+            <button
+              (click)="openEditModal(receta)"
+              class="bg-blue-500 text-white w-full px-2 py-1 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1"
+            >
+              Modificar
+            </button>
+            <button
+              (click)="openDeleteConfirmation(receta)"
+              class="bg-red-500 text-white w-full px-2 py-1 rounded-md hover:bg-red-400 focus:ring-2 focus:ring-red-600 m-1"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Botón "Volver" centrado justo debajo de la tabla -->
+  <div class="w-full flex justify-center mt-6">
+    <a 
+      href="stock" 
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block">
+      Volver
+    </a>
+  </div>
+
+  <!-- Modal para editar receta -->
+  <div *ngIf="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 sm:w-1/3">
+      <h2 class="text-xl font-semibold mb-4">Modificar Receta</h2>
+
+      <label class="block mb-2">Nombre:</label>
+      <input [(ngModel)]="selectedReceta.Nombre" class="w-full p-2 border rounded-md" />
+ 
+
+      <label class="block mt-4 mb-2">Tipo:</label>
+      <input [(ngModel)]="selectedReceta.Tipo" class="w-full p-2 border rounded-md" />
+
+      <label class="block mt-4 mb-2">Tiempo de Cocción (min):</label>
+      <input [(ngModel)]="selectedReceta.TiempoCoccion" class="w-full p-2 border rounded-md" />
+
+      <label class="block mt-4 mb-2">Ingredientes:</label>
+      <input [(ngModel)]="selectedReceta.ingredientes" class="w-full p-2 border rounded-md" />
+
+      <label class="block mt-4 mb-2">Tutorial:</label>
+      <input [(ngModel)]="selectedReceta.Tutorial" class="w-full p-2 border rounded-md" />
+
+      <label class="block mt-4 mb-2">Imagen (URL):</label>
+      <input [(ngModel)]="selectedReceta.Imagen" class="w-full p-2 border rounded-md" />
+
+      <button (click)="updateReceta()" class="bg-green-500 text-white w-full px-4 py-2 mt-4 rounded-md">Guardar Cambios</button>
+      <button (click)="closeModal()" class="bg-gray-500 text-white w-full px-4 py-2 mt-2 rounded-md">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación de eliminación -->
+  <div *ngIf="showDeleteConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 sm:w-1/3">
+      <h2 class="text-xl font-semibold mb-4">¿Estás seguro de eliminar esta receta?</h2>
+      <button (click)="deleteReceta()" class="bg-red-500 text-white w-full px-4 py-2 rounded-md">Eliminar</button>
+      <button (click)="showDeleteConfirmation = false" class="bg-gray-500 text-white w-full px-4 py-2 mt-2 rounded-md">Cancelar</button>
+    </div>
+  </div>
+</div>

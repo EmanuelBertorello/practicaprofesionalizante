@@ -1,9 +1,9 @@
 <div
-  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center"
+  class="relative overflow-x-auto min-h-screen flex flex-col items-center justify-center w-full"
   style="background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png');"
 >
   <!-- Buscador -->
-  <div class="search-container px-4 py-4">
+  <div class="search-container px-4 py-4 w-full md:w-4/5">
     <input
       type="text" 
       [(ngModel)]="searchQuery"   
@@ -13,120 +13,154 @@
     />
   </div>
 
-  <!-- Modal de confirmación -->
-  <div *ngIf="filteredStocks.length > 0; else loading">
-    <div class="w-full overflow-x-auto"> <!-- Añadido overflow-x-auto para móviles -->
- <!-- Filtros (Solo en PC) -->
-<div class="hidden md:flex space-x-4 mb-4">
-  <!-- Filtro por Tipo -->
-  <div>
-    <label class="block text-gray-700 font-semibold">Tipo:</label>
-    <select [(ngModel)]="selectedTipo" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
-      <option value="">Todos</option>
-      <option *ngFor="let tipo of tiposDisponibles" [value]="tipo">{{ tipo }}</option>
-    </select>
-  </div>
+  <!-- Contenedor de filtros y botón de reset -->
+  <div class="w-full md:w-4/5 flex flex-wrap justify-between items-center mb-4 px-4">
+    <!-- Filtros -->
+    <div class="hidden md:flex space-x-4">
+      <!-- Filtro por Tipo -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Tipo:</label>
+        <select [(ngModel)]="selectedTipo" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+          <option value="">Todos</option>
+          <option *ngFor="let tipo of tiposDisponibles" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </div>
 
-  <!-- Filtro por Macro -->
-  <div>
-    <label class="block text-gray-700 font-semibold">Macro:</label>
-    <select [(ngModel)]="selectedMacro" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
-      <option value="">Todos</option>
-      <option *ngFor="let macro of macrosDisponibles" [value]="macro">{{ macro }}</option>
-    </select>
-  </div>
-<!-- Filtro por Tipo -->
-<div>
-  <label class="block text-gray-700 font-semibold">Tipo:</label>
-  <select [(ngModel)]="selectedTipo" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
-    <option value="">Todos</option>
-    <option *ngFor="let tipo of tiposDisponibles" [value]="tipo">{{ tipo }}</option>
-  </select>
-</div>
+      <!-- Filtro por Macro -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Categoria:</label>
+        <select [(ngModel)]="selectedMacro" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+          <option value="">Todos</option>
+          <option *ngFor="let macro of macrosDisponibles" [value]="macro">{{ macro }}</option>
+        </select>
+      </div>
 
-  <!-- Filtro por Estado -->
-  <div>
-    <label class="block text-gray-700 font-semibold">Estado:</label>
-    <select [(ngModel)]="selectedEstado" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
-      <option value="">Todos</option>
-      <option value="minimo">Mínimo</option>
-      <option value="ok">Ok</option>
-      <option value="faltante">Faltante</option>
-    </select>
-  </div>
+      <!-- Filtro por Estado -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Estado:</label>
+        <select [(ngModel)]="selectedEstado" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+          <option value="">Todos</option>
+          <option value="minimo">Mínimo</option>
+          <option value="ok">Ok</option>
+          <option value="faltante">Faltante</option>
+        </select>
+      </div>
+    </div>
 
-  <!-- Botón de Reset -->
-  <div class="flex items-center justify-center">
-    <button (click)="resetFiltros()" class="bg-gray-500 text-white rounded-md px-4 py-1 hover:bg-gray-600">
-      Resetear Filtros
-    </button>
-  </div>
-</div>
-
-
-      <table class="min-w-full table-auto w-full">
-        <thead>
-          <tr>
-            <th class="px-4 py-2 border lg:w-1/3 xl:w-2/5">Nombre</th>
-            <th class="px-2 py-2 border sm:text-base lg:w-1/5">Cantidad</th> <!-- Columna cantidad más angosta -->
-            <th class="px-2 py-2 border lg:w-1/5">Tipo</th> <!-- Columna tipo más angosta -->
-            <th class="px-4 py-2 border hidden lg:table-cell">Estado</th>
-            <th class="px-4 py-2 border hidden lg:table-cell">Mínimo</th>
-            <th class="px-4 py-2 border hidden lg:table-cell">Macro</th>
-            <th class="px-4 py-2 border">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let stock of filteredStocks" 
-              [ngStyle]="{
-                'background-color': getEstado(stock) === 'faltante' ? 'rgba(255, 0, 0, 0.2)' : (getEstado(stock) === 'ok' ? 'rgba(0, 255, 0, 0.2)' : 'transparent')
-              }">
-            <td class="px-4 py-2 border d:h-full md:w-48">{{ stock.nombre }}</td>
-            <td class="px-2 py-2 border text-3xl sm:text-xl">{{ stock.cantidad }}</td> <!-- Columna cantidad más angosta -->
-            <td class="px-2 py-2 border">{{ stock.tipo }}</td> <!-- Columna tipo más angosta -->
-            <td class="px-4 py-2 border hidden lg:table-cell">{{ getEstado(stock) }}</td>
-            <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.minimo }}</td>
-            <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.macro }}</td>
-            <td class="px-4 py-2 border">
-              <button 
-                (click)="modificarStock(stock)" 
-                class="bg-blue-500 text-white w-full px-2 py-1 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1">
-                Modificar
-              </button>
-              <button 
-                (click)="mostrarModalConfirmacion(stock)" 
-                class="bg-red-500 text-white w-full px-2 py-1 rounded-md hover:bg-red-400 focus:ring-2 focus:ring-red-600 m-1">
-                Eliminar
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Botón de Reset (siempre visible) -->
+    <div class="w-full md:w-auto flex justify-center mt-2 md:mt-0">
+      <button (click)="resetFiltros()" class="bg-gray-500 text-white rounded-md px-4 py-1 hover:bg-gray-600 w-full md:w-auto">
+        Resetear Filtros
+      </button>
     </div>
   </div>
+
+  <!-- Tabla de Stocks -->
+  <div *ngIf="filteredStocks.length > 0; else loading" class="w-full md:w-4/5 w-11/12 overflow-x-auto">
+    <table class="min-w-full table-auto w-full">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 border lg:w-1/3 xl:w-2/5 text-sm sm:text-base">Nombre</th>
+          <th class="px-2 py-2 border sm:text-sm lg:w-1/5">Q</th>
+          <th class="px-2 py-2 border text-sm sm:text-base lg:w-1/5">Tipo</th>
+          <th class="px-4 py-2 border hidden lg:table-cell text-sm">Estado</th>
+          <th class="px-4 py-2 border hidden lg:table-cell text-sm">Mínimo</th>
+          <th class="px-4 py-2 border hidden lg:table-cell text-sm">Categoría</th>
+          <th class="px-4 py-2 border text-sm">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of filteredStocks" 
+            [ngStyle]="{
+              'background-color': getEstado(stock) === 'faltante' ? 'rgba(255, 0, 0, 0.2)' : 
+                                  (getEstado(stock) === 'ok' ? 'rgba(0, 255, 0, 0.2)' : 'transparent')
+            }">
+          <td class="px-4 py-2 border text-sm sm:text-base">{{ stock.nombre }}</td>
+          <td class="px-2 py-2 border text-xl sm:text-base">{{ stock.cantidad }}</td>
+          <td class="px-2 py-2 border text-sm sm:text-base">{{ stock.tipo }}</td>
+          <td class="px-4 py-2 border hidden lg:table-cell text-sm">{{ getEstado(stock) }}</td>
+          <td class="px-4 py-2 border hidden lg:table-cell text-sm">{{ stock.minimo }}</td>
+          <td class="px-4 py-2 border hidden lg:table-cell text-sm">{{ stock.categoria }}</td>
+          <td class="px-4 py-2 border text-sm">
+            <button 
+              (click)="modificarStock(stock)" 
+              class="bg-blue-500 text-white w-full px-2 py-1 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1">
+              Modificar
+            </button>
+            <button class="bg-blue-500 text-white w-full px-2 py-1 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1" (click)="bajarCantidad(stock)">Bajar</button>
+            <button 
+              (click)="mostrarModalConfirmacion(stock)" 
+              class="bg-red-500 text-white w-full px-2 py-1 rounded-md hover:bg-red-400 focus:ring-2 focus:ring-red-600 m-1">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
 
   <ng-template #loading>
     <p>Cargando...</p>
   </ng-template>
-
-  <!-- Modal de confirmación -->
-  <div *ngIf="showConfirmModal" class="modal">
-    <div class="modal-content">
-      <h3 class="text-xl font-semibold">¿Estás seguro de eliminar este stock?</h3>
-      <p><strong>{{ selectedStock?.nombre }}</strong></p>
-      <button 
-      (click)="bajaStock(selectedStock?.id)" 
-      class="text-red-500"
-      *ngIf="selectedStock?.id">
-      Sí, eliminar
-    </button>
-      <button 
-        (click)="cerrarModalConfirmacion()" 
-        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-600">
-        Cancelar
-      </button>
-    </div>
+ 
+<!-- Modal de Baja con cantidad -->
+<div class="modal" *ngIf="showBajaModal">
+  <div class="modal-content">
+    <h3>Bajar Cantidad</h3>
+    <form (ngSubmit)="confirmarBaja()">
+      <label for="cantidadBaja">Cantidad a bajar:</label>
+      <input 
+        type="number" 
+        [(ngModel)]="cantidadBaja" 
+        name="cantidadBaja" 
+        min="1" 
+        max="{{ selectedStock?.cantidad }}" 
+        required 
+      />
+      <div class="modal-buttons">
+        <button type="submit">Confirmar Baja</button>
+        <button type="button" (click)="cerrarModalBaja()">Cancelar</button>
+      </div>
+    </form>
   </div>
+</div>
+
+<div class="modal" *ngIf="showBajaModal">
+  <div class="modal-content">
+
+    <h3 class="text-xl font-semibold">Bajar Cantidad</h3>
+
+    <form (ngSubmit)="confirmarBaja()">
+      <label for="cantidadBaja">Cantidad a bajar:</label>
+      <input
+        type="number"
+        [(ngModel)]="cantidadBaja"
+        name="cantidadBaja"
+        min="1"
+        max="{{ selectedStock?.cantidad }}"
+        required
+        class="border border-gray-300 p-2 rounded-md w-full mt-2"
+      />
+      <div class="modal-buttons mt-4">
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 mx-8"
+        >
+          Confirmar Baja
+        </button>
+        <button
+          type="button"
+          (click)="cerrarModalBaja()"
+          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-600 mx-8"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+    
+  </div>
+</div>
 
   <!-- Enlaces de navegación -->
   <a 
@@ -144,36 +178,59 @@
     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6">
     Cargar Receta
   </a>
+  <a 
+    href="listadoRecetas" 
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-block mt-6">
+    Administrar Recetas
+  </a>
 
-  <!-- MODAL PARA MODIFICAR STOCK -->
-  <div *ngIf="selectedStock" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 sm:w-1/3"> <!-- w-4/5 para móviles, w-1/3 para pantallas grandes -->
-      <h2 class="text-xl font-semibold mb-4">Modificar Stock</h2>
-  
-      <label class="block mb-2">Nombre:</label>
-      <input [(ngModel)]="selectedStock.nombre" class="w-full p-2 border rounded-md" />
-  
-      <label class="block mt-4 mb-2">Cantidad:</label>
-      <input type="number" [(ngModel)]="selectedStock.cantidad" class="w-full p-2 border rounded-md" />
-  
-      <label class="block mt-4 mb-2">Medida:</label>
-      <input [(ngModel)]="selectedStock.tipo" class="w-full p-2 border rounded-md" />
-  
-      <div class="flex justify-end mt-4">
-        <button 
-          (click)="guardarCambios()" 
-          class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-400 focus:ring-2 focus:ring-blue-600">
-          Guardar
-        </button>
-        <button 
-          (click)="cerrarModal()" 
-          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-600">
-          Cancelar
-        </button>
-      </div>
+<!-- MODAL PARA MODIFICAR STOCK -->
+<div *ngIf="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 sm:w-1/3">
+    <h2 class="text-xl font-semibold mb-4">Modificar Stock</h2>
+
+    <label class="block mb-2">Nombre:</label>
+    <input [(ngModel)]="selectedStock.nombre" class="w-full p-2 border rounded-md" />
+
+    <label class="block mt-4 mb-2">Cantidad:</label>
+    <input type="number" [(ngModel)]="selectedStock.cantidad" class="w-full p-2 border rounded-md" />
+
+    <label class="block mt-4 mb-2">Medida:</label>
+    <select [(ngModel)]="selectedStock.tipo" class="w-full p-2 border rounded-md">
+      <option value="kilogramo">Kilogramo</option>
+      <option value="paquete">Paquete</option>
+      <option value="unidad/es">Unidad/es</option>
+    </select>
+
+    <!-- Cambio de "Macro" a "Categoría" con las opciones deseadas -->
+    <label class="block mt-4 mb-2">Categoría:</label>
+    <select [(ngModel)]="selectedStock.categoria" class="w-full p-2 border rounded-md">
+      <option value="perecedero">perecedero</option>
+      <option value="no_perecedero">No perecedero</option>
+    </select>
+
+    <!-- Nuevo campo para "Mínimo" -->
+    <label class="block mt-4 mb-2">Mínimo:</label>
+    <input type="number" [(ngModel)]="selectedStock.minimo" class="w-full p-2 border rounded-md" />
+
+    <div class="flex justify-end mt-4">
+      <button
+        (click)="guardarCambios()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-400 focus:ring-2 focus:ring-blue-600">
+        Guardar
+      </button>
+      <button
+        (click)="cerrarModal()"
+        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-600">
+        Cancelar
+      </button>
     </div>
   </div>
 </div>
+
+
+  </div>
+  
 
 <!-- Estilos adicionales para el modal de confirmación -->
 <style>

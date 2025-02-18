@@ -2,3 +2,7 @@
 .group-hover:hover {
     z-index: 10; /* Aumenta el z-index para ponerlo por encima de otros elementos */
 }
+.volver-btn {
+    z-index: 50; /* Asegura que el botón esté encima de los demás elementos */
+  }
+  
