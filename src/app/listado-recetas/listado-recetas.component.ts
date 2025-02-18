@@ -3,6 +3,7 @@ import { RecetaService, Receta } from '../receta.service';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-listado-recetas',
@@ -23,6 +24,10 @@ export class ListadoRecetasComponent implements OnInit {
 
   ngOnInit() {
     this.cargarRecetas();
+    if (window.innerWidth < 768) {
+      toast.error("se recomienda entrar desde un PC")
+    }
+   
   }
 
   cargarRecetas() {
@@ -62,7 +67,7 @@ export class ListadoRecetasComponent implements OnInit {
     this.selectedReceta = receta;
     this.showDeleteConfirmation = true;
   }
-
+   
   deleteReceta() {
     this.recetaService.deleteReceta(this.selectedReceta.id).then(() => {
       this.cargarRecetas();
