@@ -12,17 +12,64 @@
       class="search-input px-4 py-4 w-full"
     />
   </div>
-  
 
   <!-- Modal de confirmación -->
   <div *ngIf="filteredStocks.length > 0; else loading">
-    <div class="w-full  ">
+    <div class="w-full overflow-x-auto"> <!-- Añadido overflow-x-auto para móviles -->
+ <!-- Filtros (Solo en PC) -->
+<div class="hidden md:flex space-x-4 mb-4">
+  <!-- Filtro por Tipo -->
+  <div>
+    <label class="block text-gray-700 font-semibold">Tipo:</label>
+    <select [(ngModel)]="selectedTipo" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+      <option value="">Todos</option>
+      <option *ngFor="let tipo of tiposDisponibles" [value]="tipo">{{ tipo }}</option>
+    </select>
+  </div>
+
+  <!-- Filtro por Macro -->
+  <div>
+    <label class="block text-gray-700 font-semibold">Macro:</label>
+    <select [(ngModel)]="selectedMacro" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+      <option value="">Todos</option>
+      <option *ngFor="let macro of macrosDisponibles" [value]="macro">{{ macro }}</option>
+    </select>
+  </div>
+<!-- Filtro por Tipo -->
+<div>
+  <label class="block text-gray-700 font-semibold">Tipo:</label>
+  <select [(ngModel)]="selectedTipo" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+    <option value="">Todos</option>
+    <option *ngFor="let tipo of tiposDisponibles" [value]="tipo">{{ tipo }}</option>
+  </select>
+</div>
+
+  <!-- Filtro por Estado -->
+  <div>
+    <label class="block text-gray-700 font-semibold">Estado:</label>
+    <select [(ngModel)]="selectedEstado" (change)="filtrarStocks()" class="border rounded-md px-2 py-1">
+      <option value="">Todos</option>
+      <option value="minimo">Mínimo</option>
+      <option value="ok">Ok</option>
+      <option value="faltante">Faltante</option>
+    </select>
+  </div>
+
+  <!-- Botón de Reset -->
+  <div class="flex items-center justify-center">
+    <button (click)="resetFiltros()" class="bg-gray-500 text-white rounded-md px-4 py-1 hover:bg-gray-600">
+      Resetear Filtros
+    </button>
+  </div>
+</div>
+
+
       <table class="min-w-full table-auto w-full">
         <thead>
           <tr>
             <th class="px-4 py-2 border lg:w-1/3 xl:w-2/5">Nombre</th>
-            <th class="px-4 py-2 border sm:text-base lg:w-1/6">Cantidad</th>
-            <th class="px-4 py-2 border lg:w-1/6">Tipo</th>
+            <th class="px-2 py-2 border sm:text-base lg:w-1/5">Cantidad</th> <!-- Columna cantidad más angosta -->
+            <th class="px-2 py-2 border lg:w-1/5">Tipo</th> <!-- Columna tipo más angosta -->
             <th class="px-4 py-2 border hidden lg:table-cell">Estado</th>
             <th class="px-4 py-2 border hidden lg:table-cell">Mínimo</th>
             <th class="px-4 py-2 border hidden lg:table-cell">Macro</th>
@@ -31,24 +78,24 @@
         </thead>
         <tbody>
           <tr *ngFor="let stock of filteredStocks" 
-    [ngStyle]="{
-      'background-color': getEstado(stock) === 'faltante' ? 'rgba(255, 0, 0, 0.2)' : (getEstado(stock) === 'ok' ? 'rgba(0, 255, 0, 0.2)' : 'transparent')
-    }">
+              [ngStyle]="{
+                'background-color': getEstado(stock) === 'faltante' ? 'rgba(255, 0, 0, 0.2)' : (getEstado(stock) === 'ok' ? 'rgba(0, 255, 0, 0.2)' : 'transparent')
+              }">
             <td class="px-4 py-2 border d:h-full md:w-48">{{ stock.nombre }}</td>
-            <td class="px-4 py-2 border text-3xl sm:text-xl">{{ stock.cantidad }}</td>
-            <td class="px-4 py-2 border">{{ stock.tipo }}</td>
+            <td class="px-2 py-2 border text-3xl sm:text-xl">{{ stock.cantidad }}</td> <!-- Columna cantidad más angosta -->
+            <td class="px-2 py-2 border">{{ stock.tipo }}</td> <!-- Columna tipo más angosta -->
             <td class="px-4 py-2 border hidden lg:table-cell">{{ getEstado(stock) }}</td>
             <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.minimo }}</td>
             <td class="px-4 py-2 border hidden lg:table-cell">{{ stock.macro }}</td>
             <td class="px-4 py-2 border">
               <button 
                 (click)="modificarStock(stock)" 
-                class="bg-blue-500 text-white w-full px-4 py-2 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1">
+                class="bg-blue-500 text-white w-full px-2 py-1 rounded-md hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 m-1">
                 Modificar
               </button>
               <button 
                 (click)="mostrarModalConfirmacion(stock)" 
-                class="bg-red-500 text-white w-full px-4 py-2 rounded-md hover:bg-red-400 focus:ring-2 focus:ring-red-600 m-1">
+                class="bg-red-500 text-white w-full px-2 py-1 rounded-md hover:bg-red-400 focus:ring-2 focus:ring-red-600 m-1">
                 Eliminar
               </button>
             </td>
@@ -61,7 +108,6 @@
   <ng-template #loading>
     <p>Cargando...</p>
   </ng-template>
- 
 
   <!-- Modal de confirmación -->
   <div *ngIf="showConfirmModal" class="modal">

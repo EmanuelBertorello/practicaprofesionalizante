@@ -3,7 +3,7 @@ import { Firestore, collection, query, getDocs, deleteDoc, doc, updateDoc } from
 import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { toast } from 'ngx-sonner';
 export interface Stock {
   id: string;
   nombre: string;
@@ -18,99 +18,34 @@ export interface Stock {
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule] 
+  imports: [CommonModule, FormsModule]
 })
 export class StockComponent implements OnInit {
   stocks$: Observable<Stock[]> | undefined;
   private firestore = inject(Firestore);
-  selectedStock: Stock | null = null; // Variable para el modal
-  showConfirmModal: boolean = false; // Controla la visibilidad del modal de confirmación
-  searchQuery: string = ''; // Variable para almacenar el texto de búsqueda
-  filteredStocks: Stock[] = []; // Para almacenar los stocks filtrados
+  selectedStock: Stock | null = null;
+  showConfirmModal: boolean = false;
+  showEditModal: boolean = false; // Añadido para manejar el modal de edición
+  searchQuery: string = '';
+  selectedTipo: string = '';
+  selectedMacro: string = '';
+  selectedEstado: string = '';
+ 
+  macrosDisponibles: string[] = [];
+  filteredStocks: Stock[] = [];
+  estadosDisponibles: string[] = ['Activo', 'Inactivo']; // Ejemplo
+
+  tiposDisponibles: string[] = ['Kilogramo', 'Paquete', 'Unidad/es']; // Añadido
 
   async ngOnInit() {
-    await this.refreshStockList();  // Cargar los datos iniciales
+    await this.refreshStockList();
 
-    // Nos suscribimos al observable y actualizamos filteredStocks
     this.stocks$?.subscribe(stocks => {
-      this.filteredStocks = stocks; // Inicialmente mostrar todos los stocks
+      this.filteredStocks = stocks;
     });
   }
 
-  modificarStock(stock: Stock) {
-    this.selectedStock = { ...stock }; 
-  }
-  
-  cerrarModal() {
-    this.selectedStock = null;
-  }
-
-  // Mostrar el modal de confirmación de eliminación
-  mostrarModalConfirmacion(stock: Stock) {
-    this.selectedStock = null;  // Cierra el modal de modificación
-    this.showConfirmModal = true;  // Abre el modal de confirmación
-    this.selectedStock = stock;  // Muestra el stock seleccionado
-  }
-
-  // Cerrar el modal de confirmación sin eliminar
-  cerrarModalConfirmacion() {
-    this.selectedStock = null;
-    this.showConfirmModal = false;
-  }
-
-  // Eliminar el stock
-  async bajaStock(stockId: string | undefined) {
-    const id = stockId ?? ''; // Valor por defecto
-    const stockRef = doc(this.firestore, 'stocks', id);
-  
-    try {
-      await deleteDoc(stockRef);
-      console.log(`Stock con ID ${id} eliminado`);
-      await this.refreshStockList();
-      this.cerrarModalConfirmacion(); // Cerrar el modal después de eliminar
-    } catch (error) {
-      console.error('Error eliminando el stock:', error);
-    }
-  }
-
-  // Método para calcular el estado
-  getEstado(stock: Stock): string {
-    if (stock.cantidad > stock.minimo) {
-      return 'ok';
-    } else if (stock.cantidad === stock.minimo) {
-      return 'minimo';
-    } else {
-      return 'faltante';
-    }
-  }
-  
-
-  // Guarda los cambios realizados en el stock
-  async guardarCambios() {
-    if (this.selectedStock) {
-      const stockRef = doc(this.firestore, 'stocks', this.selectedStock.id);
-
-      try {
-        // Verifica si los campos realmente cambian antes de hacer la actualización
-        const cambios: Partial<Stock> = {};
-        if (this.selectedStock.nombre) cambios.nombre = this.selectedStock.nombre;
-        if (this.selectedStock.cantidad) cambios.cantidad = this.selectedStock.cantidad;
-        if (this.selectedStock.tipo) cambios.tipo = this.selectedStock.tipo;
-
-        if (Object.keys(cambios).length > 0) {
-          await updateDoc(stockRef, cambios);
-          console.log(`Stock con ID ${this.selectedStock.id} actualizado`);
-          this.cerrarModal();
-          await this.refreshStockList(); // Recargar la lista de stocks
-        }
-      } catch (error) {
-        console.error('Error al actualizar el stock:', error);
-      }
-    }
-  }
-
-  // Recarga la lista de stocks desde Firestore
-  private async refreshStockList() {
+  async refreshStockList() {
     const stockCollection = collection(this.firestore, 'stocks');
     const q = query(stockCollection);
 
@@ -122,23 +57,109 @@ export class StockComponent implements OnInit {
         stocks.push({ ...data, id: doc.id });
       });
       this.stocks$ = of(stocks);
-      this.filteredStocks = stocks; // Inicialmente, mostramos todos los stocks
+      this.filteredStocks = stocks;
+
+      this.tiposDisponibles = [...new Set(stocks.map(stock => stock.tipo))];
+      this.macrosDisponibles = [...new Set(stocks.map(stock => stock.macro))];
     } catch (error) {
-      console.error('Error fetching data after delete:', error);
+      toast.error('Error fetching data:');
     }
   }
 
-  // Método que se llama cuando cambia el valor del buscador
-  onSearchChange() {
-    if (this.searchQuery.trim() === '') {
-      this.stocks$?.subscribe(stocks => {
-        this.filteredStocks = stocks; // Si el buscador está vacío, mostramos todos los stocks
+  resetFiltros() {
+    this.selectedTipo = '';
+    this.selectedMacro = '';
+    this.selectedEstado = '';
+    this.filtrarStocks();
+  }
+
+  filtrarStocks() {
+    this.stocks$?.subscribe(stocks => {
+      this.filteredStocks = stocks.filter(stock => {
+        const coincideBusqueda = this.searchQuery
+          ? stock.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
+          : true;
+        const coincideTipo = this.selectedTipo ? stock.tipo === this.selectedTipo : true;
+        const coincideMacro = this.selectedMacro ? stock.macro === this.selectedMacro : true;
+        const coincideEstado = this.selectedEstado ? this.getEstado(stock) === this.selectedEstado : true;
+        return coincideBusqueda && coincideTipo && coincideMacro && coincideEstado;
       });
+    });
+  }
+
+  onSearchChange() {
+    this.filtrarStocks();
+  }
+
+  modificarStock(stock: Stock) {
+    // Solo se abre el modal de edición si el modal de confirmación no está abierto
+    if (!this.showConfirmModal) {
+      this.selectedStock = { ...stock };
+      this.showEditModal = true; // Abrir el modal de edición
+    }
+  }
+
+  cerrarModal() {
+    this.selectedStock = null;
+    this.showEditModal = false;
+  }
+
+  mostrarModalConfirmacion(stock: Stock) {
+    // Solo se abre el modal de confirmación si el modal de edición no está abierto
+    if (!this.showEditModal) {
+      this.selectedStock = stock;
+      this.showConfirmModal = true;
+    }
+  }
+
+  cerrarModalConfirmacion() {
+    this.selectedStock = null;
+    this.showConfirmModal = false;
+  }
+
+  async bajaStock(stockId: string | undefined) {
+    const id = stockId ?? '';
+    const stockRef = doc(this.firestore, 'stocks', id);
+
+    try {
+      await deleteDoc(stockRef);
+      toast.error(`Stock: ${this.selectedStock?.nombre} eliminado`);
+      await this.refreshStockList();
+      this.cerrarModalConfirmacion();
+    } catch (error) {
+      toast.error('Error eliminando el stock:' );
+    }
+  }
+
+  getEstado(stock: Stock): string {
+    if (stock.cantidad > stock.minimo) {
+      return 'ok';
+    } else if (stock.cantidad === stock.minimo) {
+      return 'minimo';
     } else {
-      // Filtrar los stocks según la búsqueda
-      this.filteredStocks = this.filteredStocks.filter(stock => 
-        stock.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      return 'faltante';
+    }
+  }
+
+  async guardarCambios() {
+    if (this.selectedStock) {
+      const stockRef = doc(this.firestore, 'stocks', this.selectedStock.id);
+
+      try {
+        const cambios: Partial<Stock> = {};
+        if (this.selectedStock.nombre) cambios.nombre = this.selectedStock.nombre;
+        if (this.selectedStock.cantidad) cambios.cantidad = this.selectedStock.cantidad;
+        if (this.selectedStock.tipo) cambios.tipo = this.selectedStock.tipo;
+
+        if (Object.keys(cambios).length > 0) {
+          await updateDoc(stockRef, cambios);
+          toast.error(`Stock :${this.selectedStock.nombre} actualizado`);
+          this.cerrarModal();
+          await this.refreshStockList();
+        }
+      } catch (error) {
+        toast.error('Error al actualizar el stock:' );
+      }
     }
   }
 }
