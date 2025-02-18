@@ -30,6 +30,7 @@ export class StockComponent implements OnInit {
   showConfirmModal: boolean = false;
   showEditModal: boolean = false;
   showBajaModal: boolean = false;
+  showDeleteModal: boolean = false;  // Agregamos esta propiedad para el modal de eliminación
   cantidadBaja: number = 1;
   searchQuery: string = '';
   selectedTipo: string = '';
@@ -49,8 +50,6 @@ export class StockComponent implements OnInit {
   async ngOnInit() {
     await this.refreshStockList();
     this.filteredStocks = [...this.stocks];  // Inicializamos el filtro
-
-    // Ya no necesitamos la suscripción, simplemente trabajamos con los datos directamente.
   }
 
   // Función para verificar si el nombre está duplicado
@@ -157,9 +156,9 @@ export class StockComponent implements OnInit {
   }
 
   mostrarModalConfirmacion(stock: Stock) {
-    this.cerrarModal();
-    this.selectedStock = stock;
-    this.showConfirmModal = true;
+    this.cerrarModal();  // Esto cierra cualquier modal abierto anteriormente
+    this.selectedStock = stock;  // Asignamos el producto seleccionado
+    this.showDeleteModal = true;  // Mostramos el modal de confirmación de eliminación
   }
 
   cerrarModal() {
@@ -169,7 +168,7 @@ export class StockComponent implements OnInit {
 
   cerrarModalConfirmacion() {
     this.selectedStock = null;
-    this.showConfirmModal = false;
+    this.showDeleteModal = false;  // Cerramos el modal de eliminación
   }
 
   async bajaStock(stockId: string | undefined) {
@@ -177,12 +176,12 @@ export class StockComponent implements OnInit {
     const stockRef = doc(this.firestore, 'stocks', id);
 
     try {
-      await deleteDoc(stockRef);
-      toast.error(`Stock: ${this.selectedStock?.nombre} eliminado`);
-      await this.refreshStockList();
-      this.cerrarModalConfirmacion();
+      await deleteDoc(stockRef);  // Eliminamos el producto en Firestore
+      toast.error(`Stock  eliminado`);
+      await this.refreshStockList();  // Recargamos la lista de productos
+      this.cerrarModalConfirmacion();  // Cerramos el modal
     } catch (error) {
-      toast.error('Error eliminando el stock: ');
+      toast.error('Error eliminando el stock: ');  // Si ocurre un error
     }
   }
 
@@ -218,5 +217,15 @@ export class StockComponent implements OnInit {
         toast.error('Error al actualizar el stock: ');
       }
     }
+  }
+
+  // Métodos para mostrar y cerrar el modal de eliminación
+  confirmarEliminacion() {
+    this.bajaStock(this.selectedStock?.id);
+    this.cerrarModalConfirmacion();
+  }
+
+  cerrarModalEliminacion() {
+    this.cerrarModalConfirmacion();
   }
 }
