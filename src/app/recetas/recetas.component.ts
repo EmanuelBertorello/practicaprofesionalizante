@@ -9,8 +9,9 @@ interface Receta {
   Tipo: string;
   ingredientes: string[];
   TiempoCoccion: number;
-  tutorial: string; // <-- Añade esto: define el tipo como string
+  Tutorial: string; // <-- Añade esto: define el tipo como string
   isHovered?: boolean;
+ 
 }
 
 @Component({
