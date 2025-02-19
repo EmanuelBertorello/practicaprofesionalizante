@@ -22,6 +22,7 @@
     "@angular/platform-server": "^18.0.0",
     "@angular/router": "^18.0.0",
     "@angular/ssr": "^18.0.7",
+    "@angular/youtube-player": "^18.2.14",
     "@firebase/auth": "^1.8.1",
     "express": "^4.18.2",
     "firebase": "^11.3.1",

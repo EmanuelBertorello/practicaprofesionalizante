@@ -4,10 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { StockService, CrearStock } from '../stock.service';
 import { toast } from 'ngx-sonner';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-new',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink,CommonModule ],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.css']
 })
@@ -16,38 +17,48 @@ export class NewComponent {
   private stockService = inject(StockService);
   private router = inject(Router);
 
-  mensajeExito: string = ''; // 🔹 Definir la variable mensajeExito
+  mensajeExito: string = '';
 
   form = this._formBuilder.group({
     nombre: this._formBuilder.control('', Validators.required),
     cantidad: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
     tipo: this._formBuilder.control('', Validators.required),
-    categoria: this._formBuilder.control('', Validators.required),  // Modificado de macro a categoria
+    categoria: this._formBuilder.control('', Validators.required),
     minimo: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
   });
 
+  // Función para normalizar el texto (convierte a minúsculas y elimina acentos)
+  private normalizeText(text: string): string {
+    return text
+      .toLowerCase()
+      .normalize("NFD") // Descompone caracteres con acento
+      .replace(/[\u0300-\u036f]/g, ""); // Elimina los caracteres de acento
+  }
+
   async submit() {
     if (this.form.valid) {
-      const { nombre, cantidad, tipo, categoria, minimo } = this.form.value;
+      let { nombre, cantidad, tipo, categoria, minimo } = this.form.value;
+
+      // Normalizar los valores antes de usarlos
+      nombre = this.normalizeText(nombre ?? '');
+      tipo = this.normalizeText(tipo ?? '');
+      categoria = this.normalizeText(categoria ?? '');
 
       try {
-        // 1. Buscar el stock existente por nombre
-        const existingStock = await this.stockService.getStockByName(nombre ?? '');
+        const existingStock = await this.stockService.getStockByName(nombre);
 
         if (existingStock) {
-          // 2. Si existe, actualizar la cantidad
-          const updatedCantidad = (existingStock.cantidad || 0) + (cantidad ?? 0); // Suma segura con nullish coalescing
-          const updatedStock = { ...existingStock, cantidad: updatedCantidad }; // Crea un nuevo objeto con la cantidad actualizada
+          const updatedCantidad = (existingStock.cantidad || 0) + (cantidad ?? 0);
+          const updatedStock = { ...existingStock, cantidad: updatedCantidad };
 
-          await this.stockService.update(updatedStock); // Llama al método de actualización en tu servicio
+          await this.stockService.update(updatedStock);
           toast.success('Stock actualizado correctamente');
         } else {
-          // 3. Si no existe, crear el nuevo stock
           const stock: CrearStock = {
-            nombre: nombre || '',
+            nombre,
             cantidad: cantidad ?? 0,
-            tipo: tipo ?? '',
-            categoria: categoria ?? '',
+            tipo,
+            categoria,
             minimo: minimo ?? 0,
           };
           await this.stockService.create(stock);
@@ -59,10 +70,9 @@ export class NewComponent {
 
         setTimeout(() => {
           this.mensajeExito = '';
- 
         }, 2000);
       } catch (error) {
-        console.error("Error al procesar el formulario:", error); // Imprime el error en la consola para depuración
+        console.error("Error al procesar el formulario:", error);
         toast.error('Error al procesar el formulario');
       }
     } else {
@@ -70,4 +80,3 @@ export class NewComponent {
     }
   }
 }
-

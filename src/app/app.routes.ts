@@ -12,6 +12,7 @@ import { RecuperarContraComponent } from './recuperar-contra/recuperar-contra.co
 import { NewComponent } from './new/new.component';
 import { CargarRecetaComponent } from './cargar-receta/cargar-receta.component';
 import { ListadoRecetasComponent } from './listado-recetas/listado-recetas.component';
+import { TutorialesComponent } from './tutoriales/tutoriales.component';
  
 
 
@@ -26,6 +27,7 @@ export  const routes: Routes = [
   { path: "new", component:NewComponent},
   { path: "cargarReceta", component:CargarRecetaComponent},
   { path: "listadoRecetas", component:ListadoRecetasComponent},
+  { path: "tutoriales", component:TutorialesComponent},
   {  path: '**',component:NotfoundComponent}
 ];
 
